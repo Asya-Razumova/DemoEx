@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Exam1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Posetit">
+    <Key>
+      <PropertyRef Name="Id_pos" />
+    </Key>
+    <Property Name="Id_pos" Type="Int32" Nullable="false" />
+    <Property Name="FIO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Login" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Pass" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Zayavky" Relationship="Self.FK_Zayavky_Posetit" FromRole="Posetit" ToRole="Zayavky" />
+  </EntityType>
+  <EntityType Name="Sotrudnik">
+    <Key>
+      <PropertyRef Name="ID_sotr" />
+    </Key>
+    <Property Name="ID_sotr" Type="Int32" Nullable="false" />
+    <Property Name="Name_sotr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Dolzn" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Login" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Pass" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Zapisi" Relationship="Self.FK_Zapisi_Sotrudnik" FromRole="Sotrudnik" ToRole="Zapisi" />
+    <NavigationProperty Name="Zayavky" Relationship="Self.FK_Zayavky_Sotrudnik" FromRole="Sotrudnik" ToRole="Zayavky" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Zapisi">
+    <Key>
+      <PropertyRef Name="Id_zapis" />
+    </Key>
+    <Property Name="Id_zapis" Type="Int32" Nullable="false" />
+    <Property Name="FIO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Name_usl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Data_z" Type="DateTime" Precision="0" />
+    <Property Name="Id_sotr" Type="Int32" />
+    <NavigationProperty Name="Sotrudnik" Relationship="Self.FK_Zapisi_Sotrudnik" FromRole="Zapisi" ToRole="Sotrudnik" />
+  </EntityType>
+  <EntityType Name="Zayavky">
+    <Key>
+      <PropertyRef Name="Id_z" />
+    </Key>
+    <Property Name="Id_z" Type="Int32" Nullable="false" />
+    <Property Name="Name_usl" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Data_z" Type="DateTime" Precision="0" />
+    <Property Name="Vremya" Type="Time" Precision="5" />
+    <Property Name="Id_pos" Type="Int32" />
+    <Property Name="ID_sotr" Type="Int32" />
+    <NavigationProperty Name="Posetit" Relationship="Self.FK_Zayavky_Posetit" FromRole="Zayavky" ToRole="Posetit" />
+    <NavigationProperty Name="Sotrudnik" Relationship="Self.FK_Zayavky_Sotrudnik" FromRole="Zayavky" ToRole="Sotrudnik" />
+  </EntityType>
+  <Association Name="FK_Zayavky_Posetit">
+    <End Role="Posetit" Type="Self.Posetit" Multiplicity="0..1" />
+    <End Role="Zayavky" Type="Self.Zayavky" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Posetit">
+        <PropertyRef Name="Id_pos" />
+      </Principal>
+      <Dependent Role="Zayavky">
+        <PropertyRef Name="Id_pos" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Zapisi_Sotrudnik">
+    <End Role="Sotrudnik" Type="Self.Sotrudnik" Multiplicity="0..1" />
+    <End Role="Zapisi" Type="Self.Zapisi" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sotrudnik">
+        <PropertyRef Name="ID_sotr" />
+      </Principal>
+      <Dependent Role="Zapisi">
+        <PropertyRef Name="Id_sotr" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Zayavky_Sotrudnik">
+    <End Role="Sotrudnik" Type="Self.Sotrudnik" Multiplicity="0..1" />
+    <End Role="Zayavky" Type="Self.Zayavky" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sotrudnik">
+        <PropertyRef Name="ID_sotr" />
+      </Principal>
+      <Dependent Role="Zayavky">
+        <PropertyRef Name="ID_sotr" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Exam1Entities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Posetit" EntityType="Self.Posetit" />
+    <EntitySet Name="Sotrudnik" EntityType="Self.Sotrudnik" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="Zapisi" EntityType="Self.Zapisi" />
+    <EntitySet Name="Zayavky" EntityType="Self.Zayavky" />
+    <AssociationSet Name="FK_Zayavky_Posetit" Association="Self.FK_Zayavky_Posetit">
+      <End Role="Posetit" EntitySet="Posetit" />
+      <End Role="Zayavky" EntitySet="Zayavky" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Zapisi_Sotrudnik" Association="Self.FK_Zapisi_Sotrudnik">
+      <End Role="Sotrudnik" EntitySet="Sotrudnik" />
+      <End Role="Zapisi" EntitySet="Zapisi" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Zayavky_Sotrudnik" Association="Self.FK_Zayavky_Sotrudnik">
+      <End Role="Sotrudnik" EntitySet="Sotrudnik" />
+      <End Role="Zayavky" EntitySet="Zayavky" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
